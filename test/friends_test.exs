@@ -53,7 +53,7 @@ defmodule FriendsTest do
     |> IO.inspect()
 
     # Transaction fails so no person is deleted
-    count_people |> IO.inspect()
+    count_people() |> IO.inspect()
     Multi.new()
     |> Multi.delete_all(:people, Friends.Person)
     |> Multi.insert(:reinsert,
@@ -62,7 +62,7 @@ defmodule FriendsTest do
     )
     |> Friends.Repo.transaction
     |> IO.inspect
-    count_people |> IO.inspect()
+    count_people() |> IO.inspect()
 
     # This transaction is valid
 
@@ -74,6 +74,13 @@ defmodule FriendsTest do
     )
     |> Friends.Repo.transaction
     |> IO.inspect
-    count_people |> IO.inspect()
+    count_people() |> IO.inspect()
+
+
+    p = Friends.Person |> Ecto.Query.first |> Friends.Repo.one
+    %Friends.HourOfWork{}
+    |> Friends.HourOfWork.changeset(%{person: p, hours: 10})
+    |> Friends.Repo.insert
+    |> IO.inspect
   end
 end
